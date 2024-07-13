@@ -1,138 +1,152 @@
-# Notice: For unknown reason the the author of this extension [@tkalayci71](https://github.com/tkalayci71) has deleted his GitHub account<br>This is a re-uploaded clone
-original URL https://github.com/tkalayci71/embedding-inspector
-Since the code is licensed under [Unlicense](LICENSE), I have re-uploaded the repository using a found fork on GitHub.
+# sd-webui-embedding-remixer
 
-I take no credit and was not involved in development of this extension and I have no plans to maintaining it.
+## Why You Should Use This Extension
 
-If someone wished to maintain this extension please get in contact.
+**sd-webui-embedding-remixer** is a tool for "next level" prompt engineering. This extension is based on the original embedding-inspector extension, and has been significantly reimagined and expanded upon for new embedding (re)-mixing workflows.
 
----
----
+### Key Benefits (TLDR):
 
-# Embedding-inspector extension version version 2.83 - 2023.01.13
+- **Visual Comparison**: Use the new Embedding Grid feature to visually compare each new batch of mixed embeddings.
+- **SDXL Compatible**: It’s not just for SD1.5 anymore. Full support added for all SDXL models and their embeddings.
+- **Disambiguation and De-Biasing Made Easy**: English is full of homonyms (the same word has multiple meanings) and CLIP language inherited that property too. Models also learned all kinds of trends from their training data, and not all of those are what you want when you are trying to realize a specific artistic vision. This extension supports powerful workflows for breaking a set of embeddings down into its most fundamental, atomic parts, and (re)-mixing those parts to capture only what you want.
+- **Maximize Your Context Window**: Context is precious. Instead of using 5-10 words of context to clarify a concept, use a single mixed embedding that means precisely what you want, freeing up valuable tokens within the 75-vector context limit and taking your prompt engineering to the next level.
+- **Create Your Own Embedding Library**: Build, reuse, and share collections of mixed embeddings for concepts or characters that matter to you. Create and save mixed embeddings here and use them in any Stable Diffusion UI that supports loading Textual Inversion (TI) embeddings.
+- **Training-Free Customization**: Mix embeddings without the need for extensive data or compute resources. Trained embeddings can be used in mixtures but are not at all required. You can achieve endless customization using only the built-in embeddings.
+- **Advanced Mixing Techniques Made Easy**: The extension provides easy to use presets and intuitive workflows for sophisticated mixing recipes so that you can create more precise and aligned  embeddings with just a few clicks.
+- **Pre-computation Power**: Pre-compute complex expressions to apply to your mixing recipes, speeding up computation and opening up significantly expanded possibilities for mixing.
 
-for [AUTOMATIC1111/stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
+With **sd-webui-embedding-remixer**, you're not just writing prompts; you're crafting precise, reusable concepts that can dramatically improve your results. Whether you're creating art, developing characters, or exploring new ideas, this tool empowers you to express your vision with unprecedented accuracy and efficiency.
 
-With this extension you can inspect internal/loaded embeddings and find out which embeddings are similar, and you can mix them to create new embeddings.
+## FAQ
 
-Inspired by [Embeddings editor](https://github.com/CodeExplode/stable-diffusion-webui-embedding-editor.git) and [Tokenizer](https://github.com/AUTOMATIC1111/stable-diffusion-webui-tokenizer.git) extensions.
+**Q: Do I need to know PyTorch to use this extension?**
 
-# What's new
+A: No, thanks to the preset options, you can use advanced recipes to mix embeddings without knowing any PyTorch. Incidentally, if you WANT to learn PyTorch and start writing your own mixing recipes, the pre-compute and eval features can be a great learning platform, but that isn't its primary purpose nor is it required to get a lot of value from this tool.
 
-v2.0: SD2.0 and multi-vector support 
+**Q: How does this relate to the original embedding-inspector extension?**
 
-v2.1: Entering embedding ID instead of name is now supported, for example you can enter "#2368" instead of "cat"
+A: sd-webui-embedding-remixer is a significant upgrade and expansion of the original embedding-inspector. It includes a great many features and improvements making it an easier and more capable tool for working with embeddings.
 
-v2.2: Entering a step value (like 1000) is now supported. This is needed only if you will continue training this embedding. Also, step and checkpoint info for loaded embeddings are now displayed.
+**Q: What happened to the original extension?**
 
-v2.3: Added "List loaded embeddings" button
+A: The author deleted their GitHub and nobody maintained it. I had a lot of ideas about how to rebuild it and make it better, so I started working on that.
 
-v2.4: Added "Concat mode" option. In this mode, embeddings will be just combined instead of being mixed. For example, "mona" and "lisa" can be combined into a single embedding "monalisa" which will contain 2 vectors, and the result will be the same as having "mona lisa" in the prompt, but with a single keyword.
+**Q: What is the current development status of this extension?**
 
-v2.5 Added a mini tokenizer. You can select "Send IDs to mixer" option to automate converting a short prompt to an embedding.
+A: See the Future Development Roadmap at the bottom of this document. This re-write is still very much in progress, as there is a lot to clean up and fix and a lot of new features to implement to achieve a very streamlined user experience.
 
-v2.52 Added an experimental eval feature. Text entered in Eval box will be evaluated and applied to the saved embedding. Not exactly useful, but see bottom of this page for usage.
+**Q: Can I mix my trained or downloaded embeddings with this tool?**
 
-v2.53 Added graph for saved embedding. (temporarily disabled in v2.531)
+A: Yes! You can mix any combination of pre-trained or downloaded embeddings (textual inversion), built-in model embeddings, and previously saved mixtures. This flexibility allows you to create unique custom embeddings tailored to your specific needs.
 
-v2.532 Added  magnitude, min, max to displayed embedding info. Not much use but most internal embeddings seem to have around 0.3-0.4 magnitude. Added "combine as 1-vector" option. See bottom of this page for details.
+**Q: Which Stable Diffusion models are supported? Does it support SDXL? Pony?**
 
-v2.533 Added "reset mixer" button
+A: sd-webui-embedding-remixer currently supports all models based on the SD1.5 and SDXL model architectures, including those that have undergone extensive community retraining (such as Pony Diffusion).
 
-v2.54 Bugfix for upper-case embedding names. Also disabled showing checksum when listing loaded embeddings
+**Q: Is this extension compatible with different Stable Diffusion implementations and UIs?**
 
-v2.55 Remove zeroed vectors (as an option in the script REMOVE_ZEROED_VECTORS = True)
+A: The embeddings created with this extension should be compatible with any implementation of Stable Diffusion that can load Textual Inversion (TI) embeddings, including ComfyUI. The extension itself is designed to work with AUTOMATIC1111's stable-diffusion-webui and has also been known to work with stable-diffusion-webui-forge.
 
-v2.56 Showing graph of saved embedding is now enabled
+**Q: I'm new to Stable Diffusion. Is this tool for me?**
 
-v2.57 Added graph for inspected embedding, and button for saving the vector to text file (saved in webui root folder)
+A: Yes! While sd-webui-embedding-remixer offers advanced features for experienced users, it's designed to be accessible to beginners as well. The preset options and intuitive interface make it easy to get started, and you can gradually explore more advanced features as you become comfortable.
 
-Added 'Eval presets' dropdown list, which lets you choose one of the 7 example eval strings, and 'Save for ALL presets' option (careful as this will save 8 embeddings, see screenshot at the bottom of this page).
+## Quick Guide: Iterative Embedding Mixing
 
-v2.8 Bugfix for saved embeddings not reloading issue. 
+Here's a step-by-step guide to create custom mixed embeddings by creating and visualizing a selection of mixtures at each step, selecting the best matches out of each batch, and then iteratively feeding them back into the mixer to create the next batch:
 
-Some terminology fixes in UI, and SHOW_SIMILARITY_SCORE as an option in script, default is False, change to = True to enable it.
+1. **Start with the Mini Tokenizer:**
+   - Enter a list of words representing different concepts you want to include in the mixture. Press the button to tokenize them. See how your words get translated into the vector language that SD understands.
+   - Optionally, use the “Inspect” feature to explore and find suggested similar tokens. For best results, include multiple embeddings describing each concept that you want to mix.
+   - After refining your list, click "Tokenize" and "Send IDs to mixer".
 
-Increased number of mixer lines, click on arrow to show/hide more lines. 
+2. **Under the Mixer, expand the Pre-Computation area and enter (TODO: add this to presets after rework):**
 
-Added 'Binary' eval preset, and made vec_mag, vec_min, vec_max variables available.
+```python
+   mean_vec = torch.mean(tot_vec, dim=0)
+   centered = tot_vec - mean_vec
+   cov = centered @ centered.T / (tot_vec.shape[0] - 1.0)
+   eigenvalues, eigenvectors = torch.linalg.eigh(cov)
+   projected = eigenvectors @ centered
+   shifted = projected + mean_vec
+```
 
-# Manual Installation
+3. **Generate Initial Grid (Optional):**
+   - Set a base filename (e.g., "mix_test01.txt") and check “Save 1-vector slices”.
+   - Set the Eval expression: `tot_vec[n]` and press “Save” to make a copy of the original, unmixed embeddings.
+   - Open the Embedding Grid tab and enter the base filename you used (“mix_test01.txt”).
+   - Generate a grid to visualize the original, unmixed embeddings.
 
-Download [embedding-inspector-main.zip](https://github.com/w-e-w/embedding-inspector/archive/refs/heads/main.zip) and extract into extensions folder.
+4. **Mix, Save, and Visualize Embeddings:**
+   - Set a new base filename (e.g. “mix_test02.txt”) and check “Save 1-vector slices”.
+   - Set the Eval expression: `shifted[n]` and press “Save” to save the (now mixed using PCA) embeddings.
+   - Open the Embedding Grid tab and enter the base filename you used (“mix_test02.txt”).
+   - Generate a grid to visualize the new mixed embeddings and make a note of which ones got closer to the target concept vs. which ones separated out the unwanted concepts from the mix. Depending on your starting set, you may have many good mixed embeddings in this new set, but you only need just 1-2 to feed back into the mixture and generate the next round. You can afford to be picky and select only the best results from each batch.
 
-# Usage
+5. **Refine Your Mix:**
+   - Identify the embeddings closest to your desired concept(s).
+   - Add these to the mixer (for example add “mix_test02.txt07” if the 7th embedding in the batch was a good match).
+   - Increment the save name (e.g., "mix_test_02.txt" → "mix_test_03.txt") and save a new mix.
+   - Visualize the new mix on the Embedding Grid and you should see that the closest matches got even closer to the target concept.
 
-1) Enter a token name into "Text Input" box and click "Inspect" button. Only the first token found in the text input will be processed. Below, some information about the token will be displayed, and similar embeddings will be listed in the order of their similarity. This is useful to check if a word is in the token database, find internal tokens that are similar to loaded embeddings, and also to discover related unicode emojis.
+6. **Iterate:**
+   - Continue adding the best mixed embeddings back into the mixer, using your intermediate mixed embeddings in subsequent mixes to further refine the concept.
+   - As the number of embeddings in the mixer grows larger, you can start removing embeddings that don’t match as closely. Just save a batch and generate a grid using `tot_vec[n]` when you need to visualize all of the current inputs without any further mixing.
 
-![image](screenshots/screenshot1.jpg)
-![image](screenshots/screenshot4.jpg)
+7. **Finalize:**
+   - Once satisfied, save copies of your final mixed embeddings using whatever name you like. You can discard the mixed embeddings that separated out the unrelated concepts, and any other embeddings from intermediate stages once you are done mixing with them.
+   - Use your new mixed embeddings in your prompts for precise concept expression with only a few tokens of context!
 
-2) Enter one or more token names in the "Name 0", "Name 1"... boxes, adjust their weights with "Multiplier" sliders, enter a unique name in "Filename" box, click "Save mixed" button. This will create a new embedding (mixed from the given embeddings and weights) and save it in the embeddings folder. If the file already exists, "Enable overwrite" box must be checked to allow overwriting it. Then, you use the filename as a keyword in your prompt.
+This process allows you to iteratively refine your embeddings, dialing in on exactly the concepts you want to capture just by choosing a small number of “best” results from each batch, while separating out the undesired concepts.
 
-![image](screenshots/screenshot2.jpg)
-![image](screenshots/screenshot3.jpg)
-
-3) Enter a short prompt in mini tokenizer text box, select "Send IDs to mixer" option, click "Tokenize". In the mixer section IDs will have been copied and "Concat mode" checked. Adjust multiplier and global multiplier sliders if necessary, enter a filename and click "Save mixed" button. Then use the filename as a keyword in your prompt.
-
-![image](screenshots/screenshot5.jpg)
-![image](screenshots/screenshot6.jpg)
-![image](screenshots/screenshot7.jpg)
-
-# Background information
-
-Stable Diffusion contains a database of ~49K words/tokens, and their numerical representations called embeddings. Your prompt is first tokenized using this database. For example, since the word "cat" is in the database it will be tokenized as a single item, but the word "catnip" is not in the database,  so will be tokenized as two items, "cat" and "nip". 
-
-New tokens/concepts can also be loaded from embeddings folder. They are usually created via textual inversion, or you can download some from [Stable Diffusion concepts library](https://huggingface.co/sd-concepts-library). With Embedding-inspector you can inspect and mix embeddings both from the internal database and the loaded database.
-
-# Eval feature
-
-Embeddings consist of 768 or 1024 numbers, these numbers determine the generated image, but what each number controls is a mystery. With eval feature you can zero/modify some of these numbers to see what happens.
-
-Enter an embedding name like "cat" in "Name 0" box, type a filename like "evaltest" and check "enable overwrite", enter the eval string in "Eval" box, click "save mixed".  You can check log for errors, and also inspect "evaltest" to see that the values have changed. Then generate the image in txt2img tab with the prompt "evaltest" to see the effect.
-
-In the Eval string, use v as the original vector. Torch and math functions are available. Also following variables are available: vec_mag: magnitude of the vector, vec_min: minimum value in the vector, vec_max: maximum value in the vector
-
-Examples:
-
-Eval "v*2" multiplies by 2, increasing the strength of the embedding
-
-Eval "v-vec_min" shifts all numbers up to the positive range, seems to have no effect.
-
-Eval "torch.relu(v)" zeroes all negative values.
-
-Eval "torch.abs(v)" makes all values positive.
-
-Eval " v/vec_mag" normalizes the vector (error if magnitude is zero)
-
-Eval " = torch.ceil(v)" rounds all values
-
-If the Eval string starts with "=", evaluation will be done item-wise. Here available variables are : v=original value, i=item no (0:768 or 0:1024), maxi=item count (768 or 1024), n=vector no, maxn=vector count. Also, original values can be accessed as tot_vec[n,i] 
-
-
-Eval " = v * (i<100)" zeroes items after 100th
-
-Eval " = v * (i<maxi//2)" zeroes items in the upper half.
-
-Eval " = v * (i>100 and i<200)" zeroes all items except between 100th and 200th.
-
-Eval " = v * (i<400 or i>500)" zeroes all items between 400th and 500th.
-
-Eval " = v * (i<300) * (n==0) + v * (i>300) * (n==1)" zeroes different parts of vectors 0 and 1 (in concat mode, see screenshot below)
-
-![image](screenshots/screenshot8.jpg)
-![image](screenshots/00000-2687304813-evaltest.jpg)
-
-# Combine as 1-vector option
-
-This option sums the final vectors into one vector, makes sense when used with eval feature. For example, to extract one of the vectors of a multi-vector embedding, you can use "=v*(n==2)" which zeroes all vectors but vector#2
-
-Another case is to combine different parts of two embeddings as one, for which you can use an eval string like "=v* (n==0) * (i<300)+v * (n==1) * (i>=300)"
-
-![image](screenshots/screenshot9.jpg)
-![image](screenshots/00007-563623717-catdog.jpeg)
-
-
-# Save for ALL eval presets
-
-![image](screenshots/eval_presets.jpg)
+## sd-webui-embedding-remixer: Changelog and Release Notes
+
+### Major Enhancements:
+- **Embedding Grid Generation**: Add a second tab to the main extension UI for generating XY-style grids from batches of mixed embeddings, allowing rapid visual comparison.
+- **SDXL Support**: Added full compatibility with all SDXL models, handling both CLIP-L and CLIP-G embeddings.
+- **Support Mixer Groups**: Add multiple embeddings to a single mixer element separated by commas to include simple mixes in larger recipes. Use << and >> to enclose groups in mini-tokenizer when sending to the mixer.
+- **Group Handling Methods**: Introduced various methods for handling grouped embeddings, including Average, Absolute Max Pooling, Normed Absolute Max Pooling, First Principal Component, Hyperspherical Centroid, and Softmax Attention.
+- **Pre-computation Feature**: Added ability to pre-compute expressions with variable assignment syntax before applying them to embeddings. This allows much more powerful mixing methods and significantly improves performance by eliminating the need for repeated computations when using Eval expressions. As an additional benefit, Eval expressions are now much more concise and readable.
+- **Slicing Mode**: Added option to save embeddings as 1-vector slices, opening up completely new mixing and REmixing recipes like PCA-based methods.
+
+### Minor Enhancements:
+- **Flexible File Format Support**: (WIP) Initial work for eventual .safetensors support.
+- **Increased Mixing Capacity**: Expanded the maximum number of embeddings that can be mixed from 16 to 75.
+- **Expanded Evaluation Context**: Provided more variables and functions in the evaluation context.
+
+### Bug Fixes and Optimizations:
+- **Code Refactoring**: (WIP) Significant refactoring to make the extension more flexible, useful, and easier to maintain.
+
+### Breaking Changes:
+- Removed some minor, unused features: (WIP) Such as the separate save function on the Inspector pane, which is no longer needed with improved saving and slicing. Cleaned up some unused UI elements.
+
+## Future Development Roadmap
+
+(Feedback and contributions are welcome)
+
+- Allow directly setting override to checkpoint (or UNet) and VAE and Clip Skip settings on the Grid Generation page.
+- Save generated images/grids to disk when using Embedding Grid.
+- Allow splitting large grids across multiple images (improve performance and see partial results more quickly).
+- Label each image on the grid with the exact name of the embedding that was used.
+- Combine pre-compute and eval within a single grouped interface element.
+- Rework eval presets to also include pre-compute, add new eval presets like the PCA based method used in the Quickstart guide.
+- Allow setting group handling method per group in mixer.
+- Allow setting weights per group element in mixer.
+- Allow custom defined separator characters in mini tokenizer (not just << and >>).
+- Allow parsing group handling and weights in mini tokenizer.
+- Option to automatically increment embedding file basenames with each subsequent save (e.g. sdxl_test40.txt -> sdxl_test41.txt).
+- Option to automatically populate grid generation with newly saved embedding basename.
+- Support saving embeddings as .safetensors (hard to implement because textual_inversion module doesn't currently support this, might require WebUI patch at least).
+- Break down large methods into composable, testable parts with single responsibility.
+- Implement eval/precompute for mixer groups.
+- Remove "Combine as 1 vector" if it's redundant with the new mixer groups and "save as 1-vector slicers".
+- Remove unused "Step" from UI.
+- Possibly remove "Save for all presets".
+- Save embeddings to a temporary working directory where they are isolated from other extensions / WebUI code and can be cleaned regularly.
+- Design a feature to interactively select which embeddings to name and save (more permanently) after viewing generated grid.
+- Add screenshots to quickstart tutorial.
+- Add tooltips to explain complex features like group handling methods and eval expressions.
+- Add an option to export/import mixer configurations as JSON or YAML for easy sharing.
+- Add a "Favorite Embeddings" list for quick access to frequently used embeddings.
+- Add einops support in pre-compute/eval.
+- Decouple mixer output size from input size (for example, the user should be able to easily generate and visualize 50 interpolated embeddings from only two inputs).
