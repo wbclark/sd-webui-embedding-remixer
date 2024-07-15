@@ -799,26 +799,25 @@ def add_tab():
 
                         for n in range(SHOW_NUM_MIX):
                             with gr.Row():
-                            with gr.Column():
-                                mix_inputs.append(gr.Textbox(label="Name "+str(n), lines=1, placeholder="Enter name of token/embedding or ID"))
-                            with gr.Column():
-                                mix_sliders.append(gr.Slider(label="Multiplier",value=1.0,minimum=-1.0, maximum=1.0, step=0.1))
+                                with gr.Column():
+                                    mix_inputs.append(gr.Textbox(label="Name "+str(n), lines=1, placeholder="Enter name of token/embedding or ID"))
+                                with gr.Column():
+                                    mix_sliders.append(gr.Slider(label="Multiplier",value=1.0,minimum=-1.0, maximum=1.0, step=0.1))
                         if MAX_NUM_MIX>SHOW_NUM_MIX:
                             with gr.Accordion('',open=False):
                                 for n in range(SHOW_NUM_MIX,MAX_NUM_MIX):
                                     with gr.Row():
-                                    with gr.Column():
-                                        mix_inputs.append(gr.Textbox(label="Name "+str(n), lines=1, placeholder="Enter name of token/embedding or ID"))
-                                    with gr.Column():
-                                        mix_sliders.append(gr.Slider(label="Multiplier",value=1.0,minimum=-1.0, maximum=1.0, step=0.1))
+                                        with gr.Column():
+                                            mix_inputs.append(gr.Textbox(label="Name "+str(n), lines=1, placeholder="Enter name of token/embedding or ID"))
+                                        with gr.Column():
+                                            mix_sliders.append(gr.Slider(label="Multiplier",value=1.0,minimum=-1.0, maximum=1.0, step=0.1))
 
-                        with gr.Accordion('',open=False):
-                            with gr.Row():
-                                with gr.Column():
-                                    precompute_button = gr.Button(value="Pre-compute expressions")
-                                    precompute_output = gr.Textbox(label="Pre-computed results", lines=3)
-                                with gr.Column():
-                                    precompute_box = gr.Textbox(label="Pre-compute expressions", lines=5, placeholder="Enter expressions to pre-compute, one per line")
+                        with gr.Row():
+                            with gr.Column():
+                                precompute_button = gr.Button(value="Pre-compute expressions")
+                                precompute_output = gr.Textbox(label="Pre-computed results", lines=3)
+                            with gr.Column():
+                                precompute_box = gr.Textbox(label="Pre-compute expressions", lines=5, placeholder="Enter expressions to pre-compute, one per line")
 
                         with gr.Row():
                                 with gr.Column():
@@ -909,6 +908,6 @@ def add_tab():
                 outputs=[grid_output_image, grid_output_info]
             )
 
-    return [(ui, "Embedding Inspector", "inspector")]
+    return [(ui, "Embedding Remixer", "iremixer")]
 
 script_callbacks.on_ui_tabs(add_tab)
