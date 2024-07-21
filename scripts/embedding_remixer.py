@@ -264,28 +264,39 @@ def create_tot_vec_from_inputs(*mix_inputs_and_sliders, concat_mode, group_handl
         stacked_vecs = torch.stack(group_vecs)
 
         if group_handling == "Average":
-            return torch.mean(stacked_vecs, dim=0)
+            mean_vec = torch.mean(stacked_vecs, dim=0)
+            return mean_vec
         elif group_handling == "Absolute Max Pooling":
             abs_stacked_vecs = torch.abs(stacked_vecs)
             max_indices = torch.argmax(abs_stacked_vecs, dim=0).unsqueeze(0)
-            return stacked_vecs.gather(0, max_indices).squeeze(0)
+            max_pooled = stacked_vecs.gather(0, max_indices).squeeze(0)
+            return max_pooled
         elif group_handling == "Normed Absolute Max Pooling":
-            abs_stacked_vecs = torch.abs(torch.nn.functional.normalize(stacked_vecs, dim=1))
+            normalized_vecs = torch.nn.functional.normalize(stacked_vecs, dim=1)
+            abs_stacked_vecs = torch.abs(normalized_vecs)
             max_indices = torch.argmax(abs_stacked_vecs, dim=0).unsqueeze(0)
-            return stacked_vecs.gather(0, max_indices).squeeze(0)
+            max_pooled = stacked_vecs.gather(0, max_indices).squeeze(0)
+            return max_pooled
         elif group_handling == "First Principal Component":
-            mean_vec = torch.mean(stacked_vecs, dim=0)
-            centered = stacked_vecs - mean_vec
+            cat_vecs = stacked_vecs.squeeze(1)
+            mean_vec = torch.mean(cat_vecs, dim=0, keepdim=True)
+            centered = cat_vecs - mean_vec
             cov = centered @ centered.T / (stacked_vecs.shape[0] - 1.0)
             _, eigenvectors = torch.linalg.eigh(cov)
-            return (eigenvectors @ centered)[-1] + mean_vec
+            pca_shifted = (eigenvectors @ centered)[-1] + mean_vec
+            return pca_shifted
         elif group_handling == "Hyperspherical Centroid":
-            normalized_vecs = torch.nn.functional.normalize(stacked_vecs, dim=1)
-            mean_vec = torch.mean(normalized_vecs, dim=0)
-            return torch.nn.functional.normalize(mean_vec, dim=0)
+            cat_vecs = stacked_vecs.squeeze(1)
+            normalized_vecs = torch.nn.functional.normalize(cat_vecs, dim=1)
+            euclidean_centroid = torch.mean(normalized_vecs, dim=0, keepdim=True)
+            hyperspherical_centroid = torch.nn.functional.normalize(euclidean_centroid, dim=1)
+            return hyperspherical_centroid
         elif group_handling == "Softmax Attention":
-            attention_weights = torch.softmax(stacked_vecs @ stacked_vecs.T, dim=1)
-            return (attention_weights @ stacked_vecs).mean(dim=0)
+            cat_vecs = stacked_vecs.squeeze(1)
+            attention_weights = torch.softmax(cat_vecs @ cat_vecs.T, dim=1)
+            softmax_attention_weighted = attention_weights @ cat_vecs
+            softmax_attention_weighted_avg = softmax_attention_weighted.mean(dim=0, keepdim=True)
+            return softmax_attention_weighted_avg
         else:
             log_messages.append(f"! Unknown group handling method: {group_handling}")
             return None
