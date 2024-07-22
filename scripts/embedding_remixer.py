@@ -1,15 +1,20 @@
-import gradio as gr
-from modules import script_callbacks, shared, devices, sd_hijack, sd_samplers, scripts, processing, images
-from modules.shared import cmd_opts, opts
-from modules.processing import process_images, Processed
-import torch, os
-from modules.textual_inversion.textual_inversion import Embedding
-import collections, math, random, re
-from modules.processing import process_images, StableDiffusionProcessingTxt2Img
-from PIL import Image
+import collections
+import contextlib
 import json
-from contextlib import closing
+import math
+import os
+import random
+import re
+
+import gradio as gr
+import torch
+from PIL import Image
 from safetensors.torch import load_file, save_file
+
+from modules import devices, images, processing, script_callbacks, scripts, sd_hijack, sd_samplers, shared
+from modules.processing import Processed, process_images, StableDiffusionProcessingTxt2Img
+from modules.shared import cmd_opts, opts
+from modules.textual_inversion.textual_inversion import Embedding
 
 MAX_NUM_MIX = 75
 SHOW_NUM_MIX = 6
