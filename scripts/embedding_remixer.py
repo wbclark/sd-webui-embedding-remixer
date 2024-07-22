@@ -6,6 +6,7 @@ import os
 import random
 import re
 
+import einops
 import gradio as gr
 import torch
 from PIL import Image
@@ -390,6 +391,7 @@ def do_precompute(*mix_inputs_and_sliders, concat_mode, precompute_expressions, 
                 computation = computation.strip()
                 try:
                     result = eval(computation, {
+                        'einops': einops,
                         'torch': torch,
                         'tot_vec': slice_vec,
                         'maxn': slice_vec.shape[0],
@@ -476,6 +478,7 @@ def do_save(*args):
                         maxi = vec.shape[1]
                         for n in range(maxn):
                             eval_context = {
+                                'einops': einops,
                                 'torch': torch,
                                 'tot_vec': vec,
                                 'vec': vec,

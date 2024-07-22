@@ -113,6 +113,7 @@ This process allows you to iteratively refine your embeddings, dialing in on exa
 - **Flexible File Format Support**: (WIP) Initial work for eventual .safetensors support.
 - **Increased Mixing Capacity**: Expanded the maximum number of embeddings that can be mixed from 16 to 75.
 - **Expanded Evaluation Context**: Provided more variables and functions in the evaluation context.
+- **Einops Support**: Added [einops](https://einops.rocks/) to custom eval & pre-compute contexts. Now you can manipulate tensors with Einstein-inspired notation.
 
 ### Bug Fixes and Optimizations:
 - **Code Refactoring**: (WIP) Significant refactoring to make the extension more flexible, useful, and easier to maintain.
@@ -148,5 +149,4 @@ This process allows you to iteratively refine your embeddings, dialing in on exa
 - Add tooltips to explain complex features like group handling methods and eval expressions.
 - Add an option to export/import mixer configurations as JSON or YAML for easy sharing.
 - Add a "Favorite Embeddings" list for quick access to frequently used embeddings.
-- Add einops support in pre-compute/eval.
 - Decouple mixer output size from input size (for example, the user should be able to easily generate and visualize 50 interpolated embeddings from only two inputs).
